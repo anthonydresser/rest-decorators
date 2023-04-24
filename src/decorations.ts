@@ -131,8 +131,8 @@ export function body(
     );
 }
 
-interface ResponderConstructor<TInjections> {
-    new (...args: TInjections[]): any;
+export interface IConstructorSignature<Services extends any[]> {
+	new (...args: [...Services]): any;
 }
 
 export interface Responses<TResponse> {
@@ -140,9 +140,9 @@ export interface Responses<TResponse> {
     readonly 401: TResponse;
 }
 
-export class Responders<TInjections, TResponse> {
+export class Responders<TInjections extends any[], TResponse> {
     private readonly responderEntries: Array<Responder<TResponse>> = [];
-    private readonly responderConstructors: Array<ResponderConstructor<TInjections>> = [];
+    private readonly responderConstructors: Array<IConstructorSignature<TInjections>> = [];
 
     constructor(private readonly responses: Responses<TResponse>) { }
 
@@ -152,13 +152,13 @@ export class Responders<TInjections, TResponse> {
 
     init(injections: { readonly key: Symbol, readonly value: any }[]) {
         this.responderConstructors.forEach((r) => {
-            const args: any[] = [];
+            const args: TInjections[] = [];
             injections.forEach(v => {
                 if (Reflect.getMetadata(v.key, r) !== undefined) {
                     args[Reflect.getMetadata(v.key, r)] = v.value;
                 }
             });
-            const responder = new r(...args)
+            const responder = Reflect.construct(r, args)
             const paths: Array<ResponderDefinition> = Reflect.getMetadata(
                 pathMetadataKey,
                 responder
@@ -170,7 +170,7 @@ export class Responders<TInjections, TResponse> {
         });
     }
 
-    register(responder: ResponderConstructor<TInjections>) {
+    register(responder: IConstructorSignature<TInjections>) {
         this.responderConstructors.push(responder);
     }
 }

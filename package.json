@@ -11,7 +11,8 @@
     "build": "tsc"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "devDependencies": {
     "reflect-metadata": "^0.1.13",

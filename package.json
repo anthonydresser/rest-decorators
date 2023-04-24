@@ -1,0 +1,22 @@
+{
+  "name": "@anthonydresser/rest-decorators",
+  "version": "0.0.1",
+  "description": "A set of decorators to make creating a rest api simplier",
+  "main": "index.js",
+  "repository": "https://github.com/anthonydresser/rest-decorators",
+  "author": "Anthony <me@anthonydresser.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^5.0.4"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
+}
